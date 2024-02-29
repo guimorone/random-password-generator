@@ -1,0 +1,2 @@
+class GeneratePasswordException(ValueError):
+    pass
