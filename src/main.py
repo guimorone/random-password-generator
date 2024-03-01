@@ -37,18 +37,26 @@ def generate_random_password(
         return min_length <= password_length
 
     def helper(password: str) -> str:
+        final_password: str = password
         for _ in range(password_length - min_length):
-            password += choice(all_chars)
+            final_password += choice(all_chars)
 
-        l: List[str] = list(password)
+        l: List[str] = list(final_password)
 
         shuffle(l)
-        while l[0] in special_chars:
+        count: int = 0
+        while password_length > MIN_PASSWORD_LENGTH_FOR_SHUFFLE_LOOP and (
+            l[0] in special_chars or l[-1] in special_chars
+        ):
+            if count >= MAX_SHUFFLE_LOOP:
+                return helper(password)
+
             shuffle(l)
+            count += 1
 
-        password = "".join(l)
+        final_password = "".join(l)
 
-        return password
+        return final_password
 
     password: str = ""
     if use_lower_case_letters:
