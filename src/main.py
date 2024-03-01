@@ -45,7 +45,7 @@ def generate_random_password(
 
         shuffle(l)
         count: int = 0
-        while password_length > MIN_PASSWORD_LENGTH_FOR_SHUFFLE_LOOP and (
+        while password_length >= MIN_PASSWORD_LENGTH_FOR_SHUFFLE_LOOP and (
             l[0] in special_chars or l[-1] in special_chars
         ):
             if count >= MAX_SHUFFLE_LOOP:
