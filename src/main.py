@@ -1,7 +1,14 @@
 import sys
+from typing import List
 from random import choice, shuffle
 from utils.exceptions import GeneratePasswordException
-from utils.constants import *
+from utils.constants import (
+    DEFAULT_PASSWORD_LENGTH,
+    LOWER_CASE_LETTERS,
+    UPPER_CASE_LETTERS,
+    NUMBERS,
+    DEFAULT_SPECIAL_CHARS,
+)
 
 
 def generate_random_password(
@@ -37,26 +44,13 @@ def generate_random_password(
         return min_length <= password_length
 
     def helper(password: str) -> str:
-        final_password: str = password
         for _ in range(password_length - min_length):
-            final_password += choice(all_chars)
+            password += choice(all_chars)
 
-        l: List[str] = list(final_password)
-
+        l: List[str] = list(password)
         shuffle(l)
-        count: int = 0
-        while password_length >= MIN_PASSWORD_LENGTH_FOR_SHUFFLE_LOOP and (
-            l[0] in special_chars or l[-1] in special_chars
-        ):
-            if count >= MAX_SHUFFLE_LOOP:
-                return helper(password)
 
-            shuffle(l)
-            count += 1
-
-        final_password = "".join(l)
-
-        return final_password
+        return "".join(l)
 
     password: str = ""
     if use_lower_case_letters:
