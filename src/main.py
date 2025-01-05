@@ -1,7 +1,7 @@
 import sys
 from typing import List
 from random import choice, shuffle
-from utils.exceptions import GeneratePasswordException
+from utils.exceptions import NoOptionChosenException, PasswordLengthException
 from utils.constants import (
     DEFAULT_PASSWORD_LENGTH,
     LOWER_CASE_LETTERS,
@@ -13,6 +13,7 @@ from utils.constants import (
 
 def generate_random_password(
     password_length: int = DEFAULT_PASSWORD_LENGTH,
+    *,
     use_lower_case_letters: bool = True,
     use_upper_case_letters: bool = True,
     use_numbers: bool = True,
@@ -30,8 +31,8 @@ def generate_random_password(
         special_chars (List[str], optional): Special characters list that must be consider. Defaults to `DEFAULT_SPECIAL_CHARS` constant value.
 
     ### Raises:
-        GeneratePasswordException: If none of the following parameters are `True`: `use_lower_case_letters`, `use_upper_case_letters`, `use_numbers`, `use_special_chars`.
-        GeneratePasswordException: If `password_length` is less than the sum of the `use_lower_case_letters`, `use_upper_case_letters`, `use_numbers`, `use_special_chars` (`min_length` variable).
+        NoOptionChosenException: If none of the following parameters are `True`: `use_lower_case_letters`, `use_upper_case_letters`, `use_numbers`, `use_special_chars`.
+        PasswordLengthException: If `password_length` is less than the number of options chosen (`use_lower_case_letters`, `use_upper_case_letters`, `use_numbers`, `use_special_chars`).
 
     ### Returns:
         str: The random password generated
@@ -71,17 +72,14 @@ def generate_random_password(
         all_chars.extend(special_chars)
 
     if min_length <= 0:
-        raise GeneratePasswordException(
-            "At least one of the following parameters must be True: use_lower_case_letters, use_upper_case_letters, use_numbers, use_special_chars!"
-        )
+        raise NoOptionChosenException()
 
     if not check_password_length():
-        raise GeneratePasswordException(f"Password length must have more than {min_length} characters!")
+        raise PasswordLengthException(min_length)
 
     return helper(password)
 
 
 if __name__ == "__main__":
     password_length: int = int(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_PASSWORD_LENGTH
-    password: str = generate_random_password(password_length)
-    print("Password:", password)
+    print("Password:", generate_random_password(password_length))
